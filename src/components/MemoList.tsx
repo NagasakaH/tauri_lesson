@@ -76,26 +76,28 @@ const MemoList: React.FC = () => {
                 setEditedMemo({ title: memo.title, content: memo.content });
               }}
             >
-              <button
-                style={{
-                  position: "absolute",
-                  top: "5px",
-                  right: "5px",
-                  backgroundColor: "red",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "3px",
-                  padding: "5px",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  if (window.confirm("削除してもよろしいですか？")) {
-                    deleteMemo(memo.id);
-                  }
-                }}
-              >
-                削除
-              </button>
+              {editingMemoId !== memo.id && (
+                <button
+                  style={{
+                    position: "absolute",
+                    top: "5px",
+                    right: "5px",
+                    backgroundColor: "red",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "3px",
+                    padding: "5px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    if (window.confirm("削除してもよろしいですか？")) {
+                      deleteMemo(memo.id);
+                    }
+                  }}
+                >
+                  削除
+                </button>
+              )}
               {editingMemoId === memo.id ? (
                 <div>
                   <input
