@@ -5,6 +5,8 @@ import { Memo } from "@ipc-if/memo";
 const MemoList: React.FC = () => {
   const [memos, setMemos] = useState<Memo[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [editingMemoId, setEditingMemoId] = useState<number | null>(null);
+  const [editedMemo, setEditedMemo] = useState<{ title: string; content: string }>({ title: "", content: "" });
   const deleteMemo = async (id: number) => {
     try {
       await invoke("delete_memo", { id });
@@ -52,10 +54,14 @@ const MemoList: React.FC = () => {
                 padding: "10px",
                 margin: "10px 0",
                 borderRadius: "5px",
-                backgroundColor: "#ffffff",
+                backgroundColor: editingMemoId === memo.id ? "#f0f8ff" : "#ffffff",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
+              }}
+              onDoubleClick={() => {
+                setEditingMemoId(memo.id);
+                setEditedMemo({ title: memo.title, content: memo.content });
               }}
             >
               <button
@@ -78,23 +84,69 @@ const MemoList: React.FC = () => {
               >
                 削除
               </button>
-              <div>
-                <h3>{memo.title}</h3>
-                <p>
-                  {memo.content
-                    .split("\n")
-                    .slice(0, 5)
-                    .map((line, index) => (
-                      <React.Fragment key={index}>
-                        {line}
-                        <br />
-                      </React.Fragment>
-                    ))}
-                  {memo.content.split("\n").length > 5 && (
-                    <React.Fragment>....</React.Fragment>
-                  )}
-                </p>
-              </div>
+              {editingMemoId === memo.id ? (
+                <div>
+                  <input
+                    type="text"
+                    value={editedMemo.title}
+                    onChange={(e) =>
+                      setEditedMemo((prev) => ({ ...prev, title: e.target.value }))
+                    }
+                    style={{
+                      width: "100%",
+                      marginBottom: "10px",
+                      padding: "5px",
+                      fontSize: "1em",
+                    }}
+                  />
+                  <textarea
+                    value={editedMemo.content}
+                    onChange={(e) =>
+                      setEditedMemo((prev) => ({ ...prev, content: e.target.value }))
+                    }
+                    style={{
+                      width: "100%",
+                      height: "100px",
+                      overflowY: "scroll",
+                      padding: "5px",
+                      fontSize: "1em",
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      const updatedMemos = memos.map((m) =>
+                        m.id === memo.id ? { ...m, ...editedMemo } : m
+                      );
+                      setMemos(updatedMemos);
+                      setEditingMemoId(null);
+                    }}
+                    style={{
+                      marginTop: "10px",
+                      padding: "5px 10px",
+                      backgroundColor: "#4CAF50",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "3px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Save
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <h3>{memo.title}</h3>
+                  <p
+                    style={{
+                      maxHeight: "100px",
+                      overflowY: "scroll",
+                      whiteSpace: "pre-wrap",
+                    }}
+                  >
+                    {memo.content}
+                  </p>
+                </div>
+              )}
               <div
                 style={{
                   marginTop: "10px",
