@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { Memo } from "@ipc-if/memo";
 
-const MemoForm = () => {
+const MemoForm = ({ setShowForm }: { setShowForm: React.Dispatch<React.SetStateAction<boolean>> }) => {
   const [title, setTitle] = useState("");
-  const [result, setResult] = useState("");
   const [content, setContent] = useState("");
   const [error, setError] = useState<string | null>(null);
   const handleSubmit = async (e: React.FormEvent) => {
@@ -12,12 +11,7 @@ const MemoForm = () => {
     try {
       const message: Memo = await invoke("add_memo", { title, content });
       console.log(message);
-      setResult(
-        `メモを追加しました ${message.title},${message.content},${message.created_at.toString()}`
-      );
       alert("Memo added successfully!");
-      setTitle("");
-      setContent("");
     } catch (error) {
       console.error("Failed to add memo:", error);
       setError(`Failed to add memo. ${error}`);
@@ -27,31 +21,38 @@ const MemoForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <button type="button" onClick={() => setShowForm(false)}>閉じる</button>
+      <button type="submit">保存</button>
       <div>
-        <label htmlFor="title">Title:</label>
+        <label htmlFor="title">タイトル:</label>
+        <br />
         <input
           type="text"
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
+          style={{ width: "90%" }}
         />
       </div>
       <div>
-        <label htmlFor="content">Content:</label>
+        <label htmlFor="content">コンテンツ:</label>
+        <br />
         <textarea
           id="content"
           value={content}
           onChange={(e) => setContent(e.target.value)}
           required
-          rows={5}
+          style={{
+            width: "90%",
+            height: `calc(100vh - 150px)`, // Adjust height to fit the window, subtracting space for other elements
+            boxSizing: "border-box",
+          }}
         ></textarea>
       </div>
-      <button type="submit">Add Memo</button>
-      <div>{result}</div>
-      <div>{error}</div>
     </form>
   );
 };
 
 export default MemoForm;
+

@@ -7,13 +7,11 @@ const MemoPage: React.FC = () => {
 
   return (
     <div>
-      <button onClick={() => setShowForm(!showForm)}>
-        {showForm ? "閉じる" : "新規作成"}
-      </button>
       {showForm ? (
-        <MemoForm />
+        <MemoForm setShowForm={setShowForm} />
       ) : (
         <>
+          <button onClick={() => setShowForm(!showForm)}>新規作成</button>
           <MemoList />
         </>
       )}

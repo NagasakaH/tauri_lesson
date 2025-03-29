@@ -6,7 +6,6 @@ import MemoPage from "./pages/Memo";
 function App() {
   return (
     <main className="container">
-      <h1>メモアプリ</h1>
       <MemoPage />
     </main>
   );

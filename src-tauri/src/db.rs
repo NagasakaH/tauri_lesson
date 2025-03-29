@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::time::{SystemTime, UNIX_EPOCH};
 use ts_rs::TS;
 
-#[derive(Debug, Serialize, Deserialize,TS)]
+#[derive(Debug, Serialize, Deserialize, TS)]
 #[ts(export, export_to = "memo.ts")]
 pub struct Memo {
     pub id: i32,
@@ -89,23 +89,41 @@ pub fn get_memos() -> Result<Vec<Memo>, String> {
     Ok(memos)
 }
 
-// #[tauri::command]
-// pub fn update_memo(id: i32, title: &str, content: &str) -> Result<()> {
-//     let conn = Connection::open("memo.db")?;
-//     let now = SystemTime::now()
-//         .duration_since(UNIX_EPOCH)
-//         .map_err(|e| rusqlite::Error::ToSqlConversionFailure(Box::new(e)))?
-//         .as_secs() as i64;
-//     conn.execute(
-//         "UPDATE memo SET title = ?1, updated_at = ?2, content = ?3 WHERE id = ?4",
-//         params![title, now, content, id],
-//     )?;
-//     Ok(())
-// }
-//
-// #[tauri::command]
-// pub fn delete_memo(id: i32) -> Result<()> {
-//     let conn = Connection::open("memo.db")?;
-//     conn.execute("DELETE FROM memo WHERE id = ?1", params![id])?;
-//     Ok(())
-// }
+#[tauri::command]
+pub fn update_memo(id: i32, title: &str, content: &str) -> Result<Memo, String> {
+    let conn = match Connection::open("memo.db") {
+        Ok(value) => value,
+        Err(_error) => return Err("データベース接続失敗".to_string()),
+    };
+    let now = match SystemTime::now().duration_since(UNIX_EPOCH) {
+        Ok(value) => value.as_secs() as i64,
+        Err(_error) => return Err("現在時刻取得失敗".to_string()),
+    };
+    let result = match conn.execute(
+        "UPDATE memo SET title = ?1, updated_at = ?2, content = ?3 WHERE id = ?4",
+        params![title, now, content, id],
+    ) {
+        Ok(_) => Ok(Memo {
+            id,
+            title: title.to_string(),
+            created_at: now,
+            updated_at: now,
+            content: content.to_string(),
+        }),
+        Err(_error) => Err("メモの更新に失敗".to_string()),
+    };
+    return result;
+}
+
+#[tauri::command]
+pub fn delete_memo(id: i32) -> Result<String, String> {
+    let conn = match Connection::open("memo.db") {
+        Ok(value) => value,
+        Err(_error) => return Err("データベース接続失敗".to_string()),
+    };
+    match conn.execute("DELETE FROM memo WHERE id = ?1", params![id]){
+        Ok(_) => {},
+        Err(_error) => return Err("メモの削除に失敗".to_string()),
+    };
+    Ok("メモの削除に成功".to_string())
+}
