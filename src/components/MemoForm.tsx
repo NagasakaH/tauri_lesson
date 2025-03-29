@@ -5,7 +5,6 @@ import { Memo } from "@ipc-if/memo";
 const MemoForm = ({ setShowForm }: { setShowForm: React.Dispatch<React.SetStateAction<boolean>> }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -14,7 +13,6 @@ const MemoForm = ({ setShowForm }: { setShowForm: React.Dispatch<React.SetStateA
       setShowForm(false);
     } catch (error) {
       console.error("Failed to add memo:", error);
-      setError(`Failed to add memo. ${error}`);
       alert(`Failed to add memo. ${error}`);
     }
   };
