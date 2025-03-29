@@ -11,7 +11,7 @@ const MemoForm = ({ setShowForm }: { setShowForm: React.Dispatch<React.SetStateA
     try {
       const message: Memo = await invoke("add_memo", { title, content });
       console.log(message);
-      alert("Memo added successfully!");
+      setShowForm(false);
     } catch (error) {
       console.error("Failed to add memo:", error);
       setError(`Failed to add memo. ${error}`);

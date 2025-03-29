@@ -8,7 +8,6 @@ const MemoList: React.FC = () => {
   const deleteMemo = async (id: number) => {
     try {
       await invoke("delete_memo", { id });
-      alert("Memo deleted successfully!");
       fetchMemos();
     } catch (error) {
       console.error("Failed to delete memo:", error);
@@ -72,11 +71,12 @@ const MemoList: React.FC = () => {
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  // Add delete logic here
-                  deleteMemo(memo.id);
+                  if (window.confirm("削除してもよろしいですか？")) {
+                    deleteMemo(memo.id);
+                  }
                 }}
               >
-                Delete
+                削除
               </button>
               <div>
                 <h3>{memo.title}</h3>
