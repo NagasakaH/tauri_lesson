@@ -30,6 +30,18 @@ const MemoList: React.FC = () => {
     }
   };
 
+  const updateMemo = async (id: number, content: string, title: string) => {
+    try {
+      await invoke("update_memo", { id, content, title });
+      fetchMemos();
+    }
+    catch (error) {
+      console.error("Failed to update memo:", error);
+      setError(`Failed to update memo. ${error}`);
+      alert(`Failed to update memo. ${error}`);
+    }
+  }
+
   useEffect(() => {
     fetchMemos();
   }, []);
@@ -114,10 +126,7 @@ const MemoList: React.FC = () => {
                   />
                   <button
                     onClick={() => {
-                      const updatedMemos = memos.map((m) =>
-                        m.id === memo.id ? { ...m, ...editedMemo } : m
-                      );
-                      setMemos(updatedMemos);
+                      updateMemo(memo.id, editedMemo.content, editedMemo.title);
                       setEditingMemoId(null);
                     }}
                     style={{
