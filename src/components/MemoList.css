@@ -1,0 +1,11 @@
+.memo-card h3 {
+  background-color: #add8e6; /* Light Blue */
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.memo-card p {
+  background-color: #ffebcd; /* Blanched Almond */
+  padding: 5px;
+  border-radius: 3px;
+}

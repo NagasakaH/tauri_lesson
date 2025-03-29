@@ -26,8 +26,8 @@
   padding-top: 10vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  text-align: center;
+  justify-content: left;
+  text-align: left;
 }
 
 .logo {
@@ -113,4 +113,19 @@ button {
   button:active {
     background-color: #0f0f0f69;
   }
+}
+
+.memo-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.memo-card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 0;
+  border-radius: 5px;
+  width: 400px;
+  box-sizing: border-box;
 }
