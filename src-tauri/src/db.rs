@@ -95,6 +95,26 @@ pub fn update_memo(id: i32, title: &str, content: &str) -> Result<Memo, String> 
         Ok(value) => value,
         Err(_error) => return Err("データベース接続失敗".to_string()),
     };
+    let mut stmt = match conn
+        .prepare("SELECT id, title, created_at, updated_at, content FROM memo WHERE id = :id")
+    {
+        Ok(value) => value,
+        Err(_error) => return Err("メモの取得に失敗".to_string()),
+    };
+
+    let memo = match stmt.query_row(params![id], |row| {
+        Ok(Memo {
+            id: row.get(0)?,
+            title: row.get(1)?,
+            created_at: row.get(2)?,
+            updated_at: row.get(3)?,
+            content: row.get(4)?,
+        })
+    }) {
+        Ok(value) => value,
+        Err(_error) => return Err("メモが見つからない".to_string()),
+    };
+
     let now = match SystemTime::now().duration_since(UNIX_EPOCH) {
         Ok(value) => value.as_secs() as i64,
         Err(_error) => return Err("現在時刻取得失敗".to_string()),
@@ -107,7 +127,7 @@ pub fn update_memo(id: i32, title: &str, content: &str) -> Result<Memo, String> 
             id,
             title: title.to_string(),
             created_at: now,
-            updated_at: now,
+            updated_at: memo.updated_at,
             content: content.to_string(),
         }),
         Err(_error) => Err("メモの更新に失敗".to_string()),
@@ -121,8 +141,8 @@ pub fn delete_memo(id: i32) -> Result<String, String> {
         Ok(value) => value,
         Err(_error) => return Err("データベース接続失敗".to_string()),
     };
-    match conn.execute("DELETE FROM memo WHERE id = ?1", params![id]){
-        Ok(_) => {},
+    match conn.execute("DELETE FROM memo WHERE id = ?1", params![id]) {
+        Ok(_) => {}
         Err(_error) => return Err("メモの削除に失敗".to_string()),
     };
     Ok("メモの削除に成功".to_string())

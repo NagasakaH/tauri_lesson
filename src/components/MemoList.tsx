@@ -132,6 +132,23 @@ const MemoList: React.FC = () => {
                   >
                     Save
                   </button>
+                  <button
+                    onClick={() => {
+                      setEditingMemoId(null);
+                    }}
+                    style={{
+                      marginTop: "10px",
+                      marginLeft: "10px",
+                      padding: "5px 10px",
+                      backgroundColor: "#f44336",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "3px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Cancel
+                  </button>
                 </div>
               ) : (
                 <div>
