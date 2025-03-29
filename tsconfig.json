@@ -24,7 +24,7 @@
     /* Types from Rust defined */
     "baseUrl": ".",
     "paths": {
-      "@ipc-if/*": ["./src-tauri/ipc-if/bindings/*"]
+      "@ipc-if/*": ["./src-tauri/bindings/*"]
     }
   },
   "include": ["src"],

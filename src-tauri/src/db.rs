@@ -5,7 +5,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use ts_rs::TS;
 
 #[derive(Debug, Serialize, Deserialize,TS)]
-#[ts(export, export_to = "memo.ts", rename_all = "camelCase")]
+#[ts(export, export_to = "memo.ts")]
 pub struct Memo {
     pub id: i32,
     pub title: String,
