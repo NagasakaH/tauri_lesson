@@ -12,8 +12,8 @@
   "app": {
     "windows": [
       {
-        "title": "tauri-app",
-        "width": 800,
+        "title": "メモツール",
+        "width": 1024,
         "height": 600
       }
     ],

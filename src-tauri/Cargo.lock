@@ -3606,19 +3606,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tauri-app"
-version = "0.1.0"
-dependencies = [
- "rusqlite",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-opener",
- "ts-rs",
-]
-
-[[package]]
 name = "tauri-build"
 version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5276,4 +5263,17 @@ dependencies = [
  "static_assertions",
  "syn 2.0.100",
  "winnow 0.7.4",
+]
+
+[[package]]
+name = "メモツール"
+version = "0.1.0"
+dependencies = [
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-opener",
+ "ts-rs",
 ]
